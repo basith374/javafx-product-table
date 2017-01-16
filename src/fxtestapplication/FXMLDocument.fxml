@@ -16,9 +16,20 @@
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
-    <Label style="-fx-font: NORMAL 20 Tahoma;" text="Sale Items"                
-        GridPane.columnIndex="0" GridPane.rowIndex="0">
-    </Label>
+    <HBox>
+        <Label style="-fx-font: NORMAL 20 Tahoma;" text="Sale Items"                
+            GridPane.columnIndex="0" GridPane.rowIndex="0">
+        </Label>
+        <Button text="Get Selection" onAction="#getSelection">
+            
+        </Button>
+        <Button text="Get Focus" onAction="#getFocused">
+            
+        </Button>
+        <Button text="Get Editing" onAction="#getEditing">
+            
+        </Button>
+    </HBox>
     <TableView fx:id="tableView" GridPane.columnIndex="0" prefWidth="600" GridPane.rowIndex="1">
         <columns>
             <TableColumn text="Item Code" prefWidth="200">

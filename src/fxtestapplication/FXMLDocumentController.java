@@ -7,6 +7,7 @@ package fxtestapplication;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -55,6 +56,7 @@ public class FXMLDocumentController implements Initializable {
                 new SaleItem("MEM025", 80, 150),
                 new SaleItem("MEM034", 30, 390)
         );
+//        tableView.setFocusTraversable(false);
         tableView.setEditable(true);
 //        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tableView.getSelectionModel().setCellSelectionEnabled(true);
@@ -82,6 +84,9 @@ public class FXMLDocumentController implements Initializable {
             });
             String code = e.getNewValue();
             item.setCode(code);
+            Platform.runLater(() -> {
+                tableView.requestFocus();
+            });
         });
         TableColumn<SaleItem, Integer> itemQtyColumn = (TableColumn) tableView.getColumns().get(1);
         itemQtyColumn.setCellFactory(p -> {
@@ -104,24 +109,32 @@ public class FXMLDocumentController implements Initializable {
             SaleItem item = e.getRowValue();
             int qty = e.getNewValue();
             item.setQty(qty);
+            Platform.runLater(() -> {
+                tableView.requestFocus();
+            });
         });
         tableView.setItems(FXCollections.observableArrayList(new SaleItem()));
-        tableView.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+        tableView.addEventFilter(KeyEvent.KEY_RELEASED, e -> { // fires after KEY_PRESSED
             if(e.getCode() == KeyCode.ENTER) {
-                TablePosition tp = tableView.getFocusModel().getFocusedCell();
-                if(tp.getRow() == -1) {
+                TablePosition focusPosition = tableView.getFocusModel().getFocusedCell();
+                if(focusPosition.getRow() == -1) {
                     tableView.getSelectionModel().select(0);
                 } else {
-                    if(tp.getColumn() == 1) {
-                        if(tp.getRow() == tableView.getItems().size() - 1) {
+                    if(focusPosition.getColumn() == 1) {
+                        if(focusPosition.getRow() == tableView.getItems().size() - 1) {
                             addRow();
-                        } else if(tp.getRow() < tableView.getItems().size() - 1) {
-                            tableView.getSelectionModel().clearAndSelect(tp.getRow() + 1, itemCodeColumn);
-                            tableView.edit(tp.getRow() + 1, itemCodeColumn);
+                        } else if(focusPosition.getRow() < tableView.getItems().size() - 1) {
+                            tableView.getSelectionModel().clearAndSelect(focusPosition.getRow() + 1, itemCodeColumn);
+                            tableView.edit(focusPosition.getRow() + 1, itemCodeColumn);
                         }
-                    } else if(tp.getColumn() == 0) {
-                        tableView.getSelectionModel().clearAndSelect(tp.getRow(), itemQtyColumn);
-                        tableView.edit(tp.getRow(), itemQtyColumn);
+                    } else if(focusPosition.getColumn() == 0) {
+                        SaleItem item = (SaleItem) tableView.getItems().get(focusPosition.getRow());
+                        items.stream()
+                                .filter(i -> i.getCode().equals(item.getCode()))
+                                .findFirst()
+                                .ifPresent(i -> item.setPrice(i.getPrice()));
+                        tableView.getSelectionModel().clearAndSelect(focusPosition.getRow(), itemQtyColumn); // declared on top
+                        tableView.edit(focusPosition.getRow(), itemQtyColumn); // declared on top
                     }
                 }
             }
@@ -141,6 +154,21 @@ public class FXMLDocumentController implements Initializable {
         
 //        tableView.scrollTo(item);
         tableView.edit(row, itemCodeColumn);
+    }
+    
+    @FXML
+    private void getSelection() {
+        System.out.println(tableView.getSelectionModel().getSelectedCells());
+    }
+    
+    @FXML
+    private void getFocused() {
+        System.out.println(tableView.getFocusModel().getFocusedCell());
+    }
+    
+    @FXML
+    private void getEditing() {
+        System.out.println(tableView.getEditingCell());
     }
     
 }

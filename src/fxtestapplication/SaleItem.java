@@ -29,6 +29,18 @@ public class SaleItem {
         this.price = new SimpleDoubleProperty(price);
     }
     
+    public SimpleStringProperty codeProperty() {
+        return code;
+    }
+    
+    public SimpleDoubleProperty priceProperty() {
+        return price;
+    }
+    
+    public SimpleIntegerProperty qtyProperty() {
+        return qty;
+    }
+    
     public String getCode() {
         return code.get();
     }

@@ -64,19 +64,19 @@ public class AutoFillTableCell<S,T> extends TableCell<S,T> {
         textField.textProperty().addListener((o, ov, nv) -> {
             String pattern = "(?i:.*" + nv + ".*)";
             List<SaleItem> matching = items.stream().filter(i -> i.getCode().matches(pattern)).collect(Collectors.toList());
-            System.out.println("matching " + matching.size());
+//            System.out.println("matching " + matching.size());
             if(matching.isEmpty() || nv.isEmpty()) {
                 menu.hide();
             } else {
                 List<MenuItem> menuItems = matching.stream().map(i -> {
                     MenuItem item = new MenuItem(i.getCode());
                     item.setOnAction(e -> {
-                        
+                        ((SaleItem)getTableRow().getItem()).setCode(i.getCode());
                     });
                     return item;
                 }).collect(Collectors.toList());
                 menu.getItems().setAll(menuItems);
-                menu.show(textField.getScene().getWindow());
+//                menu.show(textField.getScene().getWindow());
             }
         });
         
