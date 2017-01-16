@@ -1,0 +1,22 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 12, 2017, 10:40:58 AM
+    Author     : bluroe
+*/
+
+
+.editing-cell {
+    -fx-padding: 0;
+    -fx-background-insets: 0.0;
+}
+.editing-cell .text-field {
+    -fx-padding: 3 0 3 0;
+    -fx-background-insets: 0.0;
+    -fx-background-color: #FFE4B5;
+    -fx-background-radius: 0;
+    -fx-border-width: 0;
+}
